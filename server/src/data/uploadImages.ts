@@ -40,13 +40,13 @@ const uploadImages = async () => {
     console.error(`Folder not found: ${folder}`);
   }
 
-  //2. list the photo files in the folder
+  // 2. list the photo files in the folder
   const files = fs.readdirSync(folder).filter((file) => {
     return PHOTO_TYPES.includes(path.extname(file).toLowerCase());
   });
   console.log(`Uploading ${files.length} photos to Cloudinary...`);
 
-  //3. upload them one at a time (simple, and kind to a slow connection)
+  // 3. upload them one at a time (simple, and kind to a slow connection)
   let uploaded = 0;
   let failed = 0;
 
