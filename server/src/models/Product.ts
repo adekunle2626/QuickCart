@@ -62,7 +62,7 @@ export interface IProduct {
 const productSchema = new Schema<IProduct>(
   {
     name: {
-      types: String,
+      type: String,
       required: true,
       trim: true,
     },
