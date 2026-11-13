@@ -3,6 +3,8 @@
 
 import { Router } from "express";
 import categoryRoutes from "./categoryRoutes";
+import productRoutes from "./productRoutes";
+
 
 // step 5: join the routes and add a health check
 // one router joins all the route fies. app.ts mounts it at /api, so a route like "/products" becomes /api/products
@@ -13,7 +15,12 @@ const router = Router();
 router.get("health", (_req, res) => {
   res.json({ status: "ok", message: "QuickCart Api is running" });
 });
+
 router.use("/categories", categoryRoutes); // /api/categories...
+
+router.use("/products", productRoutes); // /api/products...
+
 export default router;
+
 
 // next: step 6 (start the server) => server/src/Server.ts

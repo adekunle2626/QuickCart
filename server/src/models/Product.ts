@@ -1,8 +1,7 @@
 // Product model
 // something the shop sells. prices and whole naira, eg 5400 = ₦45,500
 
-import { Date, model, Schema, Types } from "mongoose";
-import { group } from "node:console";
+import { model, Schema, Types } from "mongoose";
 import { Category } from "./Category";
 
 export interface IProductColor {
