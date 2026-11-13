@@ -49,7 +49,7 @@ export const seedDatabase = async () => {
       const id = productIds.get(name);
       if (!id) {
         throw new Error(
-          `"${owner}" links to a product thhat doesn't exist: ${name}`,
+          `"${owner}" links to a product that doesn't exist: ${name}`,
         );
       }
       return id;

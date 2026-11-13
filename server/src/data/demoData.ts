@@ -117,7 +117,7 @@ export const demoProducts = (
   return products.map((item) => {
     const categoryId = categoryIds.get(item.category);
 
-    // A typo in products.ts (eg "electronic") should stop the seed loudly, not save bad ata
+    // A typo in products.ts (eg "electronic") should stop the seed loudly, not save bad data
     if (!categoryId) {
       throw new Error(
         `${item.name} has an unknown category: "${item.category}"`,
