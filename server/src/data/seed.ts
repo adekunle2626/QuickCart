@@ -5,11 +5,11 @@
 import mongoose, { Types } from "mongoose";
 import { Category } from "../models/Category";
 import { Product } from "../models/Product";
-import { demoCategories, demoProducts } from "./demoData";
+import { demoCategories, demoProducts, demoUsers } from "./demoData";
 import { listProductPhotoId } from "../config/cloudinary";
 import { products } from "./products";
-import { categories } from "./categories";
 import { connectDB } from "../config/database";
+import { User } from "../models/User";
 
 // step 13: the seed command
 // seedDatabase() does the work and is exported, so the demo panel can reuse it.
@@ -17,7 +17,11 @@ import { connectDB } from "../config/database";
 
 export const seedDatabase = async () => {
   //1. empty the collections (both thesame time with promise.all)
-  await Promise.all([Category.deleteMany({}), Product.deleteMany({})]);
+  await Promise.all([
+    Category.deleteMany({}),
+    Product.deleteMany({}),
+    User.deleteMany({}),
+  ]);
 
   //2. save the categories, then remember each ones id by slug: "electronics" -> ObjectId(...)
   const savedCategories = await Category.insertMany(demoCategories());
@@ -72,10 +76,16 @@ export const seedDatabase = async () => {
       };
     }),
   );
-  // 6. summary for whoever ran the seed
+
+  // 6. Save the demo users. User.create (NOT insertMany): only create/save runs the model's
+  // pre("save") hook, which hashes the passwords. insertMany would store them as plain text!
+  const savedUsers = await User.create(demoUsers());
+
+  // 7. summary for whoever ran the seed
   return {
     categories: savedCategories.length,
     products: saveProducts.length,
+    users: savedUsers.length,
     withoutPhotos: saveProducts
       .filter((product) => {
         return product.images.length === 0;
@@ -93,7 +103,7 @@ const runSeed = async () => {
     const result = await seedDatabase();
 
     console.log(
-      `seeded ${result.categories} categories and ${result.categories} products`,
+      `seeded ${result.categories} categories, ${result.categories} products and ${result.users} users`,
     );
 
     if (result.withoutPhotos.length > 0) {
@@ -104,13 +114,13 @@ const runSeed = async () => {
     }
   } catch (error) {
     console.error("Seed failed", (error as Error).message);
-    process.exitCode = 1   // tells the terminal it failed, without cutting off the disconnect below
-  } finally{
-    await mongoose.disconnect()   // without this the command would hang and never finish
+    process.exitCode = 1; // tells the terminal it failed, without cutting off the disconnect below
+  } finally {
+    await mongoose.disconnect(); // without this the command would hang and never finish
   }
 };
 
 // "requir.main === module" is true only when this file is run directly (npm run seed), not when another fileimports seedDatabase (the demo panel). so importing never re-seeds by accident
 if (require.main === module) {
-    runSeed()
-} 
+  runSeed();
+}
