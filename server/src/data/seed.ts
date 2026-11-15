@@ -10,6 +10,8 @@ import { listProductPhotoId } from "../config/cloudinary";
 import { products } from "./products";
 import { connectDB } from "../config/database";
 import { User } from "../models/User";
+import { PromoCode } from "../models/PromoCode";
+import { promoCodes } from "./promoCode";
 
 // step 13: the seed command
 // seedDatabase() does the work and is exported, so the demo panel can reuse it.
@@ -20,6 +22,8 @@ export const seedDatabase = async () => {
   await Promise.all([
     Category.deleteMany({}),
     Product.deleteMany({}),
+    User.deleteMany({}),
+    PromoCode.deleteMany({}),
     User.deleteMany({}),
   ]);
 
@@ -81,11 +85,15 @@ export const seedDatabase = async () => {
   // pre("save") hook, which hashes the passwords. insertMany would store them as plain text!
   const savedUsers = await User.create(demoUsers());
 
-  // 7. summary for whoever ran the seed
+  // 7. Save the promo codes (insertMany is fine here: promo codes have no save hooks)
+  const savedPromoCodes = await PromoCode.insertMany(promoCodes);
+
+  // 8. summary for whoever ran the seed
   return {
     categories: savedCategories.length,
     products: saveProducts.length,
     users: savedUsers.length,
+    promoCodes: savedPromoCodes.length,
     withoutPhotos: saveProducts
       .filter((product) => {
         return product.images.length === 0;
@@ -94,7 +102,7 @@ export const seedDatabase = async () => {
         return product.name;
       }),
   };
-};
+};;
 
 // Runs when you type "npm run seed": connect, seed, report, disconnected
 const runSeed = async () => {
@@ -103,7 +111,7 @@ const runSeed = async () => {
     const result = await seedDatabase();
 
     console.log(
-      `seeded ${result.categories} categories, ${result.categories} products and ${result.users} users`,
+      `Seeded ${result.categories} categories, ${result.products} products, ${result.users} users and ${result.promoCodes} promo codes`,
     );
 
     if (result.withoutPhotos.length > 0) {

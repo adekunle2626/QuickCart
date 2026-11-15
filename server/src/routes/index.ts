@@ -4,6 +4,8 @@
 import { Router } from "express";
 import categoryRoutes from "./categoryRoutes";
 import productRoutes from "./productRoutes";
+import accountRoutes from "./accountRoutes";
+import promoRoutes from "./promoRoutes";
 
 
 // step 5: join the routes and add a health check
@@ -20,7 +22,10 @@ router.use("/categories", categoryRoutes); // /api/categories...
 
 router.use("/products", productRoutes); // /api/products...
 
-export default router;
+router.use("/account", accountRoutes); // /api/account...
 
+router.use("/promo-codes", promoRoutes); // /api/promo-codes...
+
+export default router;
 
 // next: step 6 (start the server) => server/src/Server.ts
