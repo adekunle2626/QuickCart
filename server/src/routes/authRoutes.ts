@@ -16,7 +16,10 @@ import {
   sendVerification,
   verifyEmail,
 } from "../controllers/authController";
+
 import { protect } from "../middleware/auth";
+
+import { advanceOrders, resetDemo } from "../controllers/demoController";
 
 const router = Router();
 
@@ -30,5 +33,9 @@ router.get("/reset-password/:token", checkResetToken);
 router.post("/reset-password/:token", resetPassword);
 router.post("/send-verification", protect, sendVerification);
 router.post("/verify-email", protect, verifyEmail);
+
+// Demo panel (STEP 28)
+router.post("/demo/reset", resetDemo);
+router.post("/demo/advance-orders", advanceOrders);
 
 export default router;

@@ -12,6 +12,10 @@ import { connectDB } from "../config/database";
 import { User } from "../models/User";
 import { PromoCode } from "../models/PromoCode";
 import { promoCodes } from "./promoCode";
+import { Order } from "../models/Order";
+import { Counter } from "../models/Counter";
+import { Review } from "../models/Review";
+import { createDemoOrders, demoShoppers } from "./demoOrders";
 
 // step 13: the seed command
 // seedDatabase() does the work and is exported, so the demo panel can reuse it.
@@ -25,6 +29,11 @@ export const seedDatabase = async () => {
     User.deleteMany({}),
     PromoCode.deleteMany({}),
     User.deleteMany({}),
+    PromoCode.deleteMany({}),
+    Order.deleteMany({}),
+    Counter.deleteMany({}), // so the next order is #QC-1042 again
+    Counter.deleteMany({}),
+    Review.deleteMany({}),
   ]);
 
   //2. save the categories, then remember each ones id by slug: "electronics" -> ObjectId(...)
@@ -88,12 +97,16 @@ export const seedDatabase = async () => {
   // 7. Save the promo codes (insertMany is fine here: promo codes have no save hooks)
   const savedPromoCodes = await PromoCode.insertMany(promoCodes);
 
-  // 8. summary for whoever ran the seed
+  // 8. Demo orders (STEP 28): 4 more shoppers and ~40 orders, so the dashboard and Order History have data
+  const demoOrderCount = await createDemoOrders(saveProducts);
+
+  // 9. summary for whoever ran the seed
   return {
     categories: savedCategories.length,
     products: saveProducts.length,
-    users: savedUsers.length,
+    users: savedUsers.length + demoShoppers.length,
     promoCodes: savedPromoCodes.length,
+    orders: demoOrderCount,
     withoutPhotos: saveProducts
       .filter((product) => {
         return product.images.length === 0;
@@ -102,7 +115,7 @@ export const seedDatabase = async () => {
         return product.name;
       }),
   };
-};;
+};
 
 // Runs when you type "npm run seed": connect, seed, report, disconnected
 const runSeed = async () => {
@@ -110,9 +123,7 @@ const runSeed = async () => {
     await connectDB();
     const result = await seedDatabase();
 
-    console.log(
-      `Seeded ${result.categories} categories, ${result.products} products, ${result.users} users and ${result.promoCodes} promo codes`,
-    );
+    `Seeded ${result.categories} categories, ${result.products} products, ${result.users} users, ${result.promoCodes} promo codes and ${result.orders} demo orders`;
 
     if (result.withoutPhotos.length > 0) {
       console.log(
