@@ -30,6 +30,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import AccountOverviewPage from "./pages/account/AccountOverviewPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
 function App() {
   return (
@@ -49,7 +50,7 @@ function App() {
             <Route path="/reset-password" element={<ResetPasswordPage />} />
 
             {/* Pages that need authentication to access */}
-            <Route>
+            <Route element={<ProtectedRoute />}>
               <Route path="/verify-email" element={<VerifyEmailPage />} />
               <Route path="/checkout" element={<CheckoutPage />} />
               <Route
@@ -89,7 +90,7 @@ function App() {
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
           {/* admin pages: admin menu + top bar, no store header or footer. only admins gets in */}
-          <Route>
+          <Route element={<ProtectedRoute adminOnly />}>
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<AdminDashboardPage />} />
               <Route path="products" element={<AdminProductsPage />} />
