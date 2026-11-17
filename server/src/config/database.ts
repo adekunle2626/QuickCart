@@ -1,7 +1,6 @@
 // database.ts
 // connects to MongoDb using the MONGO_URI from the .env file
 
-import { log } from "console";
 import mongoose from "mongoose";
 import { env } from "./env";
 

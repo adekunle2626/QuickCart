@@ -80,3 +80,124 @@ export type ProductsResponse = {
   page: number;
   pages: number;
 };
+
+// STEP 35: One product, and its reviews (server: productController.ts getProduct, reviewController.ts)
+
+export type ProductSpec = { group: string; label: string; value: string }; // a row of "Full Specifications"
+export type ProductHighlight = { icon: string; title: string; text: string }; // the 3 feature cards
+
+// GET /api/products/:idOrSlug -> { product }: everything for the Product Details page
+export type Product = ProductSummary & {
+  description: string;
+  features: string[]; // the ✓ bullet points
+  specs: ProductSpec[];
+  highlights: ProductHighlight[];
+  sku: string;
+  gallery: string[]; // big photos (empty = use images)
+  lowStockThreshold: number;
+  ratingCounts: number[]; // how many 5, 4, 3, 2 and 1 star reviews, in that order
+  category: { _id: string; name: string; slug: string; icon: string };
+  bundleProducts: ProductSummary[]; // "Frequently Bought Together"
+  relatedProducts: ProductSummary[]; // "Related Products"
+};
+
+export type ProductResponse = { product: Product };
+
+export type Review = {
+  _id: string;
+  name: string; // "Ada O." (first name + initial, server STEP 23)
+  rating: number; // 1 to 5
+  title?: string;
+  comment: string;
+  createdAt: string;
+};
+
+// GET /api/reviews/product/:idOrSlug
+export type ReviewsResponse = {
+  summary: { ratings: number; reviewCount: number; ratingCounts: number[] };
+  reviews: Review[];
+  total: number;
+  page: number;
+  pages: number;
+};
+
+// GET /api/reviews/can-review/:productId
+export type CanReviewResponse = {
+  canReview: boolean;
+  reason: string | null;
+  review: Review | null;
+};
+
+// STEP 38: Orders (server: models/Order.ts, orderController.ts)
+
+export type OrderStatus = "processing" | "shipped" | "delivered" | "cancelled";
+
+export type OrderItem = {
+  product: string; // the product's id
+  name: string; // a COPY taken when the order was placed (server STEP 22)
+  image: string;
+  sku: string;
+  price: number; // the price of one, when it was ordered
+  quantity: number;
+  color?: string;
+  lineTotal: number;
+};
+
+export type Order = {
+  _id: string;
+  orderNumber: string; // "QC-1042"
+  items: OrderItem[];
+  contact: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+  };
+  shippingAddress: Omit<Address, "_id" | "isDefault" | "label"> & {
+    label?: string;
+  };
+  deliveryMethod: "standard" | "express";
+  payment: {
+    method: "card" | "pay_on_delivery";
+    status: "paid" | "pending" | "refunded";
+    cardBrand?: string;
+    cardLast4?: string;
+    reference?: string;
+    paidAt?: string;
+  };
+  subtotal: number;
+  deliveryFee: number;
+  discount: number;
+  promoCode?: string;
+  total: number;
+  status: OrderStatus;
+  statusHistory: { status: OrderStatus; note: string; at: string }[]; // the tracker
+  estimatedDelivery: { from: string; to: string };
+  courier?: string;
+  waybill?: string;
+  deliveredAt?: string;
+  cancelledAt?: string;
+  cancelReason?: string;
+  createdAt: string;
+  passwordChangedAt?: string; // "Password last updated ..." (STEP 39)
+};
+
+// POST /api/orders and GET /api/orders/:orderNumber -> the order + what the Cancel button needs
+export type OrderResponse = {
+  order: Order;
+  canCancel: boolean;
+  cancelDeadline: string;
+};
+
+// STEP 39: My Account (server: getOrderSummary in orderController.ts)
+
+// GET /api/orders/summary -> the numbers and the 3 newest orders for the My Account overview
+export type OrderSummaryResponse = { totalOrders: number; inProgress: number; delivered: number; recentOrders: Order[] };
+
+// STEP 40: Order History (server: getMyOrders in orderController.ts)
+
+// GET /api/orders -> my orders + the numbers on the tabs
+export type MyOrdersResponse = {
+  orders: Order[];
+  counts: { all: number; "in-progress": number; shipped: number; delivered: number; cancelled: number };
+};

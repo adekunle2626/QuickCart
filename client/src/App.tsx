@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/home/HomePage";
 import ShopPage from "./pages/shop/ShopPage";
 import CategoriesPage from "./pages/shop/CategoriesPage";
-import ProductDetailsPage from "./pages/shop/ProductDetailsPage";
 import CartPage from "./pages/cart/CartPage";
 import LoginPage from "./pages/auth/LoginPage";
 import RegisterPage from "./pages/auth/RegisterPage";
@@ -31,6 +30,8 @@ import AccountOverviewPage from "./pages/account/AccountOverviewPage";
 import AdminDashboardPage from "./pages/admin/AdminDashboardPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
+import ProductDetailsPage from "./pages/shop/ProductDetailsPage";
+
 
 function App() {
   return (
@@ -42,12 +43,15 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/shop" element={<ShopPage />} />
             <Route path="/categories" element={<CategoriesPage />} />
-            <Route path="/product/:id" element={<ProductDetailsPage />} />
+            <Route path="/product/:productId" element={<ProductDetailsPage />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route
+              path="/reset-password/:token"
+              element={<ResetPasswordPage />}
+            />
 
             {/* Pages that need authentication to access */}
             <Route element={<ProtectedRoute />}>

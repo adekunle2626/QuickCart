@@ -4,12 +4,13 @@ import FeaturedProducts from "../../components/home/FeaturedProducts";
 import FlashSale from "../../components/home/FlashSale";
 import HeroSection from "../../components/home/HeroSection";
 import NewArrivals from "../../components/home/NewArrivals";
-import NewsLetterBanner from "../../components/home/NewsLetterBanner";
+import NewsLetterBanner from "../../components/home/NewsletterBanner";
 import PromoBanner from "../../components/home/PromoBanner";
 import RecommendedForYou from "../../components/home/RecommendedForYou";
 import Testimonials from "../../components/home/Testimonials";
 import TodaysDeal from "../../components/home/TodaysDeal";
 import TrustBar from "../../components/home/TrustBar";
+import RecentlyViewed from "../../components/home/RecentlyViewed";
 
 const HomePage = () => {
   return (
@@ -24,6 +25,7 @@ const HomePage = () => {
       <PromoBanner />
       <NewArrivals />
       <RecommendedForYou />
+      <RecentlyViewed />
       <Testimonials />
       <NewsLetterBanner />
     </div>
