@@ -11,7 +11,7 @@ const navLinks = [
   { label: "Categories", to: "/categories" },
 ];
 
-const Navbar = () => {
+const NavBar = () => {
   const { count } = useCart();
 
   return (
@@ -75,4 +75,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default NavBar;

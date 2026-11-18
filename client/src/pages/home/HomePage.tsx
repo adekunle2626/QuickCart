@@ -4,7 +4,7 @@ import FeaturedProducts from "../../components/home/FeaturedProducts";
 import FlashSale from "../../components/home/FlashSale";
 import HeroSection from "../../components/home/HeroSection";
 import NewArrivals from "../../components/home/NewArrivals";
-import NewsLetterBanner from "../../components/home/NewsletterBanner";
+import NewsletterBanner from "../../components/home/NewsletterBanner";
 import PromoBanner from "../../components/home/PromoBanner";
 import RecommendedForYou from "../../components/home/RecommendedForYou";
 import Testimonials from "../../components/home/Testimonials";
@@ -27,7 +27,7 @@ const HomePage = () => {
       <RecommendedForYou />
       <RecentlyViewed />
       <Testimonials />
-      <NewsLetterBanner />
+      <NewsletterBanner />
     </div>
   );
 };
