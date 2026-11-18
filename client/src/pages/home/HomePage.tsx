@@ -14,7 +14,7 @@ import RecentlyViewed from "../../components/home/RecentlyViewed";
 
 const HomePage = () => {
   return (
-    <div className="mx-auto flex max-w-360 flex-col gap-10 px-4 pt-10">
+    <div className="mx-auto flex max-w-360 flex-col gap-10 px-4 pt-10 pb-20 md:px-12">
       <HeroSection />
       <TrustBar />
       <CategoryGrid />
