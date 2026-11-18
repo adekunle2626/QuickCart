@@ -3,7 +3,7 @@
 
 // STEP 41 (part 1): Admin types
 
-import type { Order, OrderStatus } from "./api";
+import type { Address, Order, OrderStatus } from "./api";
 
 export type DashboardRange = "7d" | "30d" | "90d" | "year";
 
@@ -113,4 +113,75 @@ export type AdminCategory = {
   slug: string;
   icon: string;
   productCount: number;
+};
+
+// STEP 43: Admin orders (server: adminOrderController.ts, STEP 26)
+
+export type AdminOrderTab = "all" | OrderStatus;
+
+// One row of GET /api/admin/orders (the server's TABLE_FIELDS)
+export type AdminOrderRow = Pick<
+  Order,
+  | "_id"
+  | "orderNumber"
+  | "waybill"
+  | "courier"
+  | "contact"
+  | "total"
+  | "status"
+  | "createdAt"
+> & {
+  shippingAddress: { city: string; state: string };
+  items: { name: string; image: string; quantity: number }[];
+  payment: Pick<Order["payment"], "method" | "status" | "cardBrand">;
+};
+
+export type AdminOrdersResponse = {
+  orders: AdminOrderRow[];
+  total: number;
+  page: number;
+  pages: number;
+  counts: AdminOrderCounts; // the tabs and the cards, for ALL orders
+  sales: number; // the money of every order that isn't cancelled
+  refunded: number; // the money of the cancelled orders
+  couriers: string[]; // "QuickCart Express", "GIG Logistics", "DHL Express"
+};
+
+// GET /api/admin/orders/:orderNumber -> the order with its customer's account, and the buttons it may have
+export type AdminOrderResponse = {
+  order: Order & {
+    user: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      createdAt: string;
+    } | null;
+  };
+  nextStatuses: OrderStatus[]; // where it may go next, e.g. ["shipped", "cancelled"]
+  couriers: string[];
+};
+
+// STEP 44: Admin customers (server: adminCustomerController.ts, STEP 26)
+
+// One row of GET /api/admin/customers: the customer + numbers worked out from their orders
+export type AdminCustomerRow = {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone?: string;
+  isEmailVerified: boolean;
+  createdAt: string;
+  orderCount: number;
+  totalSpent: number; // cancelled orders not counted
+  lastOrderAt: string | null;
+};
+
+export type AdminCustomersResponse = { customers: AdminCustomerRow[]; total: number; page: number; pages: number };
+
+// GET /api/admin/customers/:id -> the customer, their addresses and their 20 newest orders
+export type AdminCustomerResponse = {
+  customer: AdminCustomerRow & { addresses: Address[] };
+  orders: (Pick<Order, "_id" | "orderNumber" | "total" | "status" | "createdAt"> & { items: { quantity: number }[] })[];
 };

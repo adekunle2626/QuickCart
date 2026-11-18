@@ -32,6 +32,7 @@ import TextInput from "../form/TextInput";
 import ImageUploader from "./ImageUploader";
 import TagInput from "./TagInput";
 import UnsavedChangesBar from "./UnsavedChangesBar";
+import { announceCountsChanged } from "../../utils/adminEvents";
 
 // What the form boxes hold. Numbers are kept as text while typing ("" = empty box), and turned into numbers on save.
 type FormValues = {
@@ -294,6 +295,7 @@ const ProductForm = ({ product, categories }: ProductFormProps) => {
         title: product ? "Product updated successfully" : "Product created",
         message,
       });
+      announceCountsChanged(); // the menu's "Products 40" (STEP 43)
       navigate("/admin/products");
     } catch (err) {
       setServerError((err as Error).message); // e.g. "That sku is already in use."
@@ -308,7 +310,9 @@ const ProductForm = ({ product, categories }: ProductFormProps) => {
         `/admin/products/${product._id}`,
         { method: "DELETE" },
       );
+
       showToast({ type: "success", title: message });
+
       navigate("/admin/products");
     } catch (err) {
       showToast({
@@ -316,7 +320,10 @@ const ProductForm = ({ product, categories }: ProductFormProps) => {
         title: "Couldn't delete the product",
         message: (err as Error).message,
       });
+      // ProductForm.tsx, in handleDelete, after showToast(...):
+      announceCountsChanged();
     }
+    
   };
 
   const pill = product ? STATUS_PILL[product.status] : null;
