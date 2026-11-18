@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Footer from "../components/layout/Footer";
-import Navbar from "../components/layout/NavBar";
+import NavBar from "../components/layout/NavBar";
 import AddedToCartModal from "../components/product/AddedToCardModal";
 import ScrollToTop from "../components/layout/ScrollToTop";
 
@@ -8,14 +8,14 @@ import ScrollToTop from "../components/layout/ScrollToTop";
 const MainLayout = () => {
   return (
     <>
-      <Navbar />
+      <NavBar />
       <main>
         <Outlet />
       </main>
       <Footer />
       <AddedToCartModal />
       <ScrollToTop />
-      <Navbar />
+      <NavBar />
     </>
   );
 };
